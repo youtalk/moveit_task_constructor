@@ -695,19 +695,28 @@ bool Connecting::compatible(const InterfaceState& from_state, const InterfaceSta
 	const planning_scene::PlanningSceneConstPtr& from = from_state.scene();
 	const planning_scene::PlanningSceneConstPtr& to = to_state.scene();
 
-	if (from->getWorld()->size() != to->getWorld()->size())
+	if (from->getWorld()->size() != to->getWorld()->size()){
+		ROS_WARN_STREAM("states for " << name() << " not compatible: different number of objects");
 		return false;  // different number of collision objects
+	}
 
 	// both scenes should have the same set of collision objects, at the same location
 	for (const auto& from_object_pair : *from->getWorld()) {
 		const collision_detection::World::ObjectPtr& from_object = from_object_pair.second;
 		const collision_detection::World::ObjectConstPtr& to_object = to->getWorld()->getObject(from_object_pair.first);
-		if (!to_object) return false;  // object missing
-		if (from_object->shape_poses_.size() != to_object->shape_poses_.size()) return false;  // shapes not matching
+		if (!to_object){
+			ROS_WARN_STREAM("states for " << name() << " not compatible: object '" << from_object_pair.first << "' does not exist in second scene");
+			return false;  // object missing
+		}
+		if (from_object->shape_poses_.size() != to_object->shape_poses_.size()){
+			ROS_WARN_STREAM("states for " << name() << " not compatible: object '" << from_object_pair.first << "' has different number of poses?");
+			return false;  // shapes not matching
+		}
 
 		for (auto from_it = from_object->shape_poses_.cbegin(), from_end = from_object->shape_poses_.cend(),
 		     to_it = to_object->shape_poses_.cbegin(); from_it != from_end; ++from_it, ++to_it)
 			if (!(from_it->matrix() - to_it->matrix()).isZero(1e-4)){
+				ROS_WARN_STREAM("states for " << name() << " not compatible: object '" << from_object_pair.first << "' has different poses");
 				return false;  // transforms do not match
 			}
 	}
