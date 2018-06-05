@@ -62,7 +62,7 @@ const moveit::core::JointModelGroup* findJointModelGroup(const moveit::core::Rob
 			                    std::inserter(difference, difference.begin()));
 			for(const std::string& diff_joint : difference){
 				const moveit::core::JointModel* diff_jm = model.getJointModel(diff_joint);
-				if(!diff_jm->isPassive() && !diff_jm->getMimic())
+				if(!diff_jm->isPassive() && !diff_jm->getMimic() && diff_jm->getType() != robot_model::JointModel::FIXED)
 					continue;
 			}
 			return jmg;
