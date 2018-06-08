@@ -41,6 +41,8 @@
 #include <rviz_marker_tools/marker_creation.h>
 #include <eigen_conversions/eigen_msg.h>
 
+#include <moveit/trajectory_processing/iterative_spline_parameterization.h>
+
 namespace moveit { namespace task_constructor { namespace stages {
 
 MoveRelative::MoveRelative(const std::string& name, const solvers::PlannerInterfacePtr& planner)
@@ -279,7 +281,13 @@ COMPUTE:
 	// store result
 	if (robot_trajectory) {
 		scene->setCurrentState(robot_trajectory->getLastWayPoint());
-		if (dir == BACKWARD) robot_trajectory->reverse();
+
+		if (dir == BACKWARD){
+			robot_trajectory->reverse();
+			trajectory_processing::IterativeSplineParameterization isp;
+			isp.computeTimeStamps(*robot_trajectory);
+		}
+
 		solution.setTrajectory(robot_trajectory);
 		if (!success)
 			solution.markAsFailure();
