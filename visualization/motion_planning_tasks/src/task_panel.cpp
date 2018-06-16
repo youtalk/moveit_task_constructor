@@ -348,6 +348,11 @@ void TaskView::onCurrentStageChanged(const QModelIndex &current, const QModelInd
 	// removing stuff is allowed any valid selection except top-level items
 	d_ptr->actionRemoveTaskTreeRows->setEnabled(current.isValid() && current.parent().isValid());
 
+	// when deleting rows, current index changes, but selection is empty ?!?
+	QItemSelectionModel *sm = d_ptr->tasks_view->selectionModel();
+	if (current.isValid())
+		sm->select(current, QItemSelectionModel::Select);
+
 	BaseTaskModel *task;
 	QModelIndex task_index;
 	std::tie(task, task_index) = d_ptr->getTaskModel(current);
@@ -359,7 +364,7 @@ void TaskView::onCurrentStageChanged(const QModelIndex &current, const QModelInd
 	int sort_column = view->header()->sortIndicatorSection();
 	Qt::SortOrder sort_order = view->header()->sortIndicatorOrder();
 
-	QItemSelectionModel *sm = view->selectionModel();
+	sm = view->selectionModel();
 	QAbstractItemModel *m = task ? task->getSolutionModel(task_index) : nullptr;
 	view->setModel(m);
 	view->sortByColumn(sort_column, sort_order);
