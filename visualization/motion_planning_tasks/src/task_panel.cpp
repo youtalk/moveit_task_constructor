@@ -363,7 +363,7 @@ void TaskView::onCurrentStageChanged(const QModelIndex &current, const QModelInd
 	QAbstractItemModel *m = task ? task->getSolutionModel(task_index) : nullptr;
 	view->setModel(m);
 	view->sortByColumn(sort_column, sort_order);
-	if (sm) delete sm;  // we don't store the selection model
+	sm->deleteLater();  // we don't store the selection model
 	sm = view->selectionModel();
 
 	if (sm) {
@@ -378,7 +378,7 @@ void TaskView::onCurrentStageChanged(const QModelIndex &current, const QModelInd
 	sm = view->selectionModel();
 	m = task ? task->getPropertyModel(task_index) : nullptr;
 	view->setModel(m);
-	delete sm;  // we don't store the selection model
+	sm->deleteLater();  // we don't store the selection model
 }
 
 void TaskView::onCurrentSolutionChanged(const QModelIndex &current, const QModelIndex &previous)
