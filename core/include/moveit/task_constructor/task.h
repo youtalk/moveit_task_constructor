@@ -73,6 +73,7 @@ public:
 	                                                            const std::string &ns = "move_group",
 	                                                            const std::string &planning_plugin_param_name = "planning_plugin",
 	                                                            const std::string &adapter_plugins_param_name = "request_adapters");
+	// TODO: whitespace in id breaks and is not checked
 	Task(const std::string& id = "",
 	     ContainerBase::pointer &&container = std::make_unique<SerialContainer>("task pipeline"));
 	Task(Task &&other);
