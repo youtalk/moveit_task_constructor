@@ -88,6 +88,13 @@ public:
 
 	/// allow / forbid collisions for each combination of pairs in first and second lists
 	void allowCollisions(const Names& first, const Names& second, bool allow);
+	/// allow / forbid collisions for pair (first, second)
+	void allowCollisions(const std::string& first, const std::string& second, bool allow) {
+		allowCollisions(Names{first}, Names{second}, allow);
+	}
+	void allowCollisions(const std::string& first, const Names& second, bool allow) {
+		allowCollisions(Names{first}, second, allow);
+	}
 	/// allow / forbid all collisions for given object
 	void allowCollisions(const std::string& object, bool allow) {
 		allowCollisions(Names({object}), Names(), allow);
