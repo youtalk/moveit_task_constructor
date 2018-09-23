@@ -108,6 +108,9 @@ public:
 	void setIgnoreCollisions(bool flag) {
 		setProperty("ignore_collisions", flag);
 	}
+	void setMinSolutionDistance(double distance) {
+		setProperty("min_solution_distance", distance);
+	}
 
 protected:
 	std::queue<const SolutionBase*> targets_;
