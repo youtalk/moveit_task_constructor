@@ -76,18 +76,13 @@ void PredicateFilter::onNewSolution(const SolutionBase &s)
 {
 	const auto& props = properties();
 
-	InterfaceState state(s.start()->scene()->diff());
-	forwardProperties(*s.start(), state);
-
-	SubTrajectory solution;
-
 	std::string comment = s.comment();
 
+	double cost= s.cost();
 	if( !props.get<Predicate>("predicate")(s, comment) )
-		solution.markAsFailure();
-	solution.setComment(comment);
+		cost= std::numeric_limits<double>::infinity();
 
-	spawn(std::move(state), std::move(solution));
+	liftSolution(s, cost, comment);
 }
 
 } } }
