@@ -320,7 +320,7 @@ DisplaySolutionPtr RemoteTaskModel::processSolutionMessage(const moveit_task_con
 
 	// caching is only enabled for top-level solutions (stage_id == 1)
 	// otherwise we would store PlanningScenes over and over
-	if (!msg.sub_solution.empty() &&
+	if (false && !msg.sub_solution.empty() &&
 	    msg.sub_solution.front().stage_id == 1 &&
 	    msg.sub_solution.front().id != 0) {
 		// cache solution for future use
@@ -369,8 +369,7 @@ DisplaySolutionPtr RemoteTaskModel::getSolution(const QModelIndex &index)
 			srv.request.solution_id = id;
 			try {
 				if (get_solution_client_->call(srv)) {
-					id_to_solution_[id] = result = processSolutionMessage(srv.response.solution);
-					return result;
+					return processSolutionMessage(srv.response.solution);
 				} else { // on failure mark remote task as destroyed: don't retrieve more solutions
 					flags_ |= IS_DESTROYED;
 				}
