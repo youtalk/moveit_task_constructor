@@ -269,7 +269,7 @@ MOVEIT_CLASS_FORWARD(SolutionBase)
 class SubTrajectory : public SolutionBase {
 public:
 	SubTrajectory(const robot_trajectory::RobotTrajectoryConstPtr& trajectory = robot_trajectory::RobotTrajectoryConstPtr(),
-	              double cost = 0.0)
+	              double cost = 0.0, std::string comment = "")
 	   : SolutionBase(nullptr, cost), trajectory_(trajectory)
 	{}
 
